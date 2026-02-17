@@ -1,0 +1,18 @@
+[project]
+name = "pubmedai"
+version = "0.1.0"
+description = "Add your description here"
+requires-python = ">=3.12"
+dependencies = [
+    "biopython>=1.86",
+    "chromadb>=1.5.0",
+    "langchain>=1.2.10",
+    "lightrag-hku>=1.4.9.11",
+    "numpy>=2.4.2",
+    "openai>=2.21.0",
+    "pandas>=2.3.3",
+    "pymupdf>=1.27.1",
+    "sentence-transformers>=5.2.2",
+    "streamlit>=1.54.0",
+    "tiktoken>=0.12.0",
+]
