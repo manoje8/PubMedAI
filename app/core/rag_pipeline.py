@@ -1,8 +1,6 @@
 import os
 from typing import Optional, List, Dict
 
-import chromadb
-from huggingface_hub import metadata_save
 from lightrag import LightRAG, QueryParam
 from lightrag.llm.openai import gpt_4o_complete, openai_embed
 from lightrag.utils import setup_logger
@@ -102,3 +100,35 @@ Format your response in a clear, structured manner suitable for healthcare profe
 
         await self.add_documents(chunks=chunks)
         return await self.generate_diagnosis_support(query=query)
+
+
+    async def get_citations(self, chunks: List[Dict]) -> List[Dict]:
+        """Extract citations from the retrieved documents"""
+        citations = []
+        seen = set()
+
+        for chunk in chunks:
+            metadata = chunk['metadata']
+            source = metadata.get('source', '')
+
+            if source and source not in seen:
+                seen.add(source)
+
+                citation = {
+                    'source': source,
+                    'type': metadata.get('type', 'unknown'),
+                    'relevance_score': source.get('distance', 0)
+                }
+
+                if 'pmid' in metadata:
+                    citation['pmid'] = metadata['pmid']
+                    citation['title'] = metadata.get('title', '')
+                    citation['journal'] = metadata.get('journal', '')
+
+                citations.append(citation)
+
+
+            return citations
+
+
+        return citations

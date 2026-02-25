@@ -5,7 +5,7 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 from typing import List, Dict
 from config import Config
 
-from app.utils.logger import logger
+from shared.logger import logger
 
 class DocumentProcessor:
     def __init__(self):
