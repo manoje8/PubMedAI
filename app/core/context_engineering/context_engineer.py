@@ -1,4 +1,4 @@
-from typing import Dict
+from typing import Dict, List
 
 from app.model.context_model import ClinicalContextType, UrgencyLevel, EngineeredContext
 from shared.logger import logger
@@ -53,6 +53,9 @@ class ContextEngineer:
         context_type = self.__identify_context_type(raw_input)
 
         urgency = self.__assess_urgency(raw_input)
+
+        structured_symptoms = self.__structure_symptoms(raw_input.get('symptoms', []))
+
 
 
     def __identify_context_type(self, raw_input: Dict) -> ClinicalContextType:
@@ -109,3 +112,33 @@ class ContextEngineer:
                 return UrgencyLevel.CRITICAL
 
         return UrgencyLevel.ROUTINE
+
+
+    def __structure_symptoms(self, symptoms: List) -> List[Dict]:
+        structured = []
+
+        for symptom in symptoms:
+            structured_symptom = {
+                'description': symptom.get('description', ''),
+                'onset': symptom.get('onset', 'unknown'),
+                'duration': symptom.get('duration', 'unknown'),
+                'severity': symptom.get('severity', 5),
+                'character': symptom.get('character', ''),
+                'modifying_factors': symptom.get('modifying_factors', ''),
+                'associated_symptoms': symptom.get('associated', []),
+                'clinical_significance': self.__self_symptoms_significance(symptom)
+            }
+
+            structured.append(structured_symptom)
+
+        return structured
+
+    async def __self_symptoms_significance(self, symptom: Dict) -> str:
+        severity = symptom.get('severity', 5)
+
+        if severity >= 8:
+            return "high"
+        elif severity >= 4:
+            return "moderate"
+        else:
+            return "low"

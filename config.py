@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 class Config:
+    APP_VERSION = os.getenv("APP_VERSION", "0.0.1")
     OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
     OPENAI_MODEL_NAME = os.getenv("OPENAI_MODEL_NAME")
 
